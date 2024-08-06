@@ -1,0 +1,20 @@
+get_demo: False
+train: False
+rollout: False
+
+user: 'test'
+alg: 'bc' # Choose between 'bc' and 'stable'
+num_dp: 300 # Number of datapoints to train the model on. N datapoints = N/20 seconds of data.
+eval_num: 0 # rillout number of a given model
+seed: 0
+train_full: False
+
+defaults:
+    - _self_  
+    - override hydra/hydra_logging: disabled  
+    - override hydra/job_logging: disabled
+
+hydra:
+    output_subdir: null
+    run:
+        dir: .

@@ -1,0 +1,20 @@
+get_demo: False
+train: False
+rollout: False
+
+alg: 'bc' #Choose between 'bc', 'ccil', 'stable_bc' and 'stable_ccil'
+test_case: 1 # 1: test distribution matches training distribution
+             # 2: test distribution has a new human agent with different behavior
+             # 3: test distribution has new starting states for the robot car
+num_demos: 5
+num_rollouts: 100
+
+defaults:
+    - _self_  
+    - override hydra/hydra_logging: disabled  
+    - override hydra/job_logging: disabled
+
+hydra:
+    output_subdir: null
+    run:
+        dir: .

@@ -1,0 +1,17 @@
+get_demo: False
+train: False
+rollout: False
+
+alg: 'bc' #Choose between 'bc' and 'stable'
+num_dp: 1000
+num_rollouts: 1000
+
+defaults:
+    - _self_  
+    - override hydra/hydra_logging: disabled  
+    - override hydra/job_logging: disabled
+
+hydra:
+    output_subdir: null
+    run:
+        dir: .
