@@ -8,7 +8,7 @@ The autonomous car state $x \in \mathbb{R}^2$ is its position and the action $u 
 To collect demonstrations in this environment, both the agents optimize for the following cost function:
 
 $$
-Cost(x, y, c) = \|x(t + \Delta t - c)\| - \|x(t) - x\| + 0.75 \cdot \|x(t) - y(t)\| - 0.75 \cdot \|x(t + \Delta t) - y(t)\|
+Cost(x, y, c) = \|\|x(t + \Delta t - c)\|\| - \|\|x(t) - x\|\| + 0.75 \cdot \|\|x(t) - y(t)\|\| - 0.75 \cdot \|\|x(t + \Delta t) - y(t)\|\|
 $$
 
 where $c$ is the position of the constant goal in the environment (across the intersection).
@@ -34,7 +34,7 @@ This script will create a folder `data/` and generate demonstration datasets for
 In this environment, since the robot does not have access to the environment dynamics (dynamics of the simulated human car), we use the loss function in Equation 11 to learn a policy for Stable-BC:
 
 $$
-\mathcal L(\theta) = \sum_{(x, y, u) \in \mathcal D}\Big [ \|u - \pi_\theta(x, y)\|^2 + \lambda_1 \|A_2\| + \lambda_2 \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
+\mathcal L(\theta) = \sum_{(x, y, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, y)\|\|^2 + \lambda_1 \|\|A_2\|\| + \lambda_2 \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
 $$
 
 with $\lambda_1 = 0.1$ and $\lambda_2=10.0$. 
