@@ -4,10 +4,13 @@ This directory provides the implemetnation details for the nonlinear quadrotor e
 The enviornment consists of a quadrotor that must navigate across a room with spherical obstacles.
 The quadrotor's state $x \in \mathbb{R}^6$ includes its position $(p_x, p_y, p_z)$ and velocity $(v_x, v_y, v_z)$, and the quadrotor's action $u \in \mathbb{R}^3$ includes its acceleration $u_T$, roll $u_\phi$, and pitch $u_\theta$. 
 State $x$ evolves with nonlinear dynamics:
+$$
 \begin{gather*}
    \dot{p}_x = v_x, \quad \dot{p}_y = v_y, \quad \dot{p}_z = v_z \\
     \dot{v}_x = a_g \tan u_\theta, \quad \dot{v}_y = -a_g \tan u_\phi, \quad \dot{v}_z = u_T - a_g 
 \end{gather*}
+$$
+where $a_g = 9.81$ is the acceleration due to gravity.
 
 ## Expert
 The expert for this environment is the MPPI controller which minimizes the quadrotors distance to the goal position while avoiding obstacles. The MPPI controller uses a Gaussian distribution to sample actions.
