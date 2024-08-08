@@ -10,21 +10,7 @@ State $x$ evolves with nonlinear dynamics:
 \end{gather*}
 
 ## Expert
-The expert for this environment is the MPPI controller which minimizes the cost function:
-
-```latex
-\begin{align*}
-\text{min\_dist\_to\_obstacles} &= \min(\text{dist\_to\_obs}, \text{dist\_to\_map\_boundaries}) \\
-\\
-\text{goal\_cost} &= \sum \left( \text{dist\_to\_goal} \times \text{goal\_cost\_weight} \right) \\
-\\
-\text{obstacle\_cost} &= \sum \left( \exp \left( - \text{min\_dist\_to\_obstacles} \times \text{obstacle\_cost\_exponential\_weight} \right) \times \text{obstacle\_cost\_weight} \right) \\
-\\
-\text{control\_cost} &= \sum \left( \sum \left( \left( \frac{u - \begin{bmatrix} A_G \\ 0 \\ 0 \end{bmatrix}}{\begin{bmatrix} f\_g\_diff\_max \\ \text{roll\_max} \\ \text{pitch\_max} \end{bmatrix}} \right)^2 \right) \times \text{control\_cost\_weight} \right) \\
-\\
-\text{total\_cost} &= \text{goal\_cost} + \text{obstacle\_cost} + \text{control\_cost}
-\end{align*}
-
+The expert for this environment is the MPPI controller which minimizes the quadrotors distance to the goal position while avoiding obstacles. The MPPI controller uses a Gaussian distribution to sample actions.
 
 ## Implementation
 To collect demos, train and evaluate all the algorithms over 10 independent runs run the following command
