@@ -11,7 +11,8 @@ State $x$ evolves with nonlinear dynamics:
 
 ## Expert
 The expert for this environment is the MPPI controller which minimizes the cost function:
-$$
+
+```latex
 \begin{align*}
 \text{min\_dist\_to\_obstacles} &= \min(\text{dist\_to\_obs}, \text{dist\_to\_map\_boundaries}) \\
 \\
@@ -23,7 +24,7 @@ $$
 \\
 \text{total\_cost} &= \text{goal\_cost} + \text{obstacle\_cost} + \text{control\_cost}
 \end{align*}
-$$
+
 
 ## Implementation
 To collect demos, train and evaluate all the algorithms over 10 independent runs run the following command
