@@ -7,20 +7,13 @@ import pickle
 from utils import *
 import sys, time, os
 from datetime import datetime
-
 from quadrotor_mppi import *
 
 
 
 
-
-
-
-
-
-
 ########################################################
-# ------------------  GET IMITATION AGENT TRAJECTORIES  -----------------------
+# ----- GET IMITATION AGENT TRAJECTORIES  --------------
 ########################################################
 
 def get_imitation_agent_action(imitating_agent, state_array, control_bounds, device ):
@@ -40,8 +33,6 @@ def get_imitation_agent_action_sequential(imitating_agent, state_array_list, con
 
 
 def get_imitating_agent_trajectory(imitating_agent, state_array, x_goal, obstacle_list, map_boundaries, control_bounds, device = 'cpu'):
-
-    # start every trajectory with the same seed
     seedEverything()
     state_array = state_array.reshape(1,6)
     distance2goal = get_dist_to_goal(state_array, x_goal)
@@ -89,8 +80,6 @@ def generate_imitating_agent_trajectories_sequential(initial_condition_array_lis
 
 
 def get_imitating_agent_trajectory_action_noise(imitating_agent, state_array, x_goal, obstacle_list, map_boundaries, control_bounds, device = 'cpu'):
-
-    # start every trajectory with the same seed
     seedEverything()
     state_array = state_array.reshape(1,6)
     distance2goal = get_dist_to_goal(state_array, x_goal)
@@ -125,7 +114,6 @@ def generate_imitating_agent_trajectories_action_noise_sequential(initial_condit
     fail_trajectories_list = []
     fail_controls_list = []
     for i in range(len(initial_condition_array_list)):
-
         print ('---', i + 1, f' / {len(initial_condition_array_list)}' , end="\r")
         trajectory, control, valid_trajectory_indicator = get_imitating_agent_trajectory_action_noise(imitating_agent, initial_condition_array_list[i], x_goal, obstacle_list, map_boundaries, control_bounds, device )
         if valid_trajectory_indicator:
@@ -142,10 +130,7 @@ def generate_imitating_agent_trajectories_action_noise_sequential(initial_condit
 
 
 def test_imitation_agent( num_dems, type, random_seed, test_name, base_path = None):
-    # check to see whether training actually changed the system stability
-
     n_test_trajs = 100
-
 
     x_goal = np.array([4.0, 2.5, 2.5])
     obstacle_list = np.array([ 
@@ -161,20 +146,12 @@ def test_imitation_agent( num_dems, type, random_seed, test_name, base_path = No
     THRUST_BOUND = [A_G - f_g_diff_max, A_G + f_g_diff_max]
     control_bounds = torch.tensor([ THRUST_BOUND, ROLL_BOUND, PITCH_BOUND]).T
 
-
-
-
     models_path= base_path + f'/{num_dems}dems/{random_seed}'
-
-
 
     model_path = models_path + f"/im_model{type}.pt"
 
     im_model = MyModel()
     im_model.load_state_dict(torch.load( model_path ))
-
-
-    # test_name = 'unsafe_hard_states_test'
 
     if test_name == 'training_region':
         # sample initial conditions
@@ -182,7 +159,6 @@ def test_imitation_agent( num_dems, type, random_seed, test_name, base_path = No
         y_range = [0.5, 4.5]
         z_range = [ 0.5, 4.5]
         test_initial_conditions_array = sample_initial_conditions_array( y_range, z_range,  num_of_sample = n_test_trajs)
-
 
     im_success_trajectories_list, im_success_controls_list, im_fail_trajectories_list, im_fail_controls_list = \
         generate_imitating_agent_trajectories_action_noise_sequential(test_initial_conditions_array, im_model, x_goal, obstacle_list, map_boundaries, control_bounds, device = 'cpu' )
@@ -263,22 +239,4 @@ def test_imitation_agent( num_dems, type, random_seed, test_name, base_path = No
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     plt.savefig( all_iterations_rollout_plot_str, dpi=300)
-
-    a = 1
     
-
-
-
-
-if __name__ == "__main__":
-    random_seed = 0
-    num_dems = 11
-    type = 0
-    test_name = 'training_region'
-    # test_imitation_agent(num_dems, type, random_seed, test_name)
-    type = 1
-
-    base_path = 'sim10_quadrotor/first_results_0.001lr_1000epoch/lamda_0.01'
-    test_imitation_agent(num_dems, type, random_seed, test_name, base_path)
-
-    a = 1

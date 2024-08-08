@@ -5,26 +5,14 @@ from train_model import StateImitationDataset
 from models import MyModel
 import torch
 import numpy as np
-from torch.utils.data import Dataset
-from models import MyModel
-import pickle
 import matplotlib.pyplot as plt
-import wandb
-import datetime
-from utils import seedEverything
 from tqdm import tqdm
 import os, sys
 import multiprocessing
 import numpy as np
-import pickle
-import matplotlib.pyplot as plt
-import multiprocessing
 from utils import *
 from sklearn.model_selection import train_test_split
 from quadrotor_mppi import roll_max, pitch_max, A_G, f_g_diff_max
-
-
-
 
 
 def get_one_trajectory_lean(initial_condition_array, x_goal, obstacle_list, map_boundaries, lambda_, covariance, **kwargs ):
@@ -89,8 +77,6 @@ def get_expert_trajectories_multiprocessing( initial_condition_array_list, x_goa
 
 
 
-
-
 def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
 
 
@@ -149,7 +135,6 @@ def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
         previous_n_demonstrations = n_demonstrations
 
         # get the training trajectories for this iteration
-        
         rollout_success_trajectories_list_this_iter, rollout_success_controls_list_this_iter, rollout_fail_trajectories_list_this_iter, rollout_fail_controls_list_this_iter =\
         get_expert_trajectories_multiprocessing( training_initial_conditions_array_this_iteration, x_goal, obstacle_list, map_boundaries, lambda_, covariance, **kwargs )
 
@@ -157,31 +142,20 @@ def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
         rollout_trajectories_list_this_iter = [ *rollout_success_trajectories_list_this_iter, *rollout_fail_trajectories_list_this_iter ]
         rollout_controls_list_this_iter = [ *rollout_success_controls_list_this_iter, *rollout_fail_controls_list_this_iter ]
 
-
-
-
         # collect all rollout trajectories
         rollout_trajectories_list = [ *rollout_trajectories_list, *rollout_trajectories_list_this_iter ]
 
-        
-
         states_this_iteration = np.concatenate( rollout_trajectories_list_this_iter )
-        # states_this_iteration = torch.from_numpy(states_this_iteration)
-
 
         actions_this_iteration = np.concatenate( rollout_controls_list_this_iter )
         
-        # actions_this_iteration = torch.from_numpy(actions_this_iteration)
-
         # add the new data to the training data
         visited_states = np.concatenate( (visited_states, states_this_iteration), axis=0)
         expert_actions = np.concatenate( (expert_actions, actions_this_iteration), axis=0)
 
-
         # save the data        
 
         # plot training rollouts
-        
         all_iterations_rollout_plot_str = path_to_save_this_iteration + f'/dart_rollout_trajectories_{n_demonstrations}dems.png'
         # plot the trajectories
         fig = plt.figure()
@@ -213,20 +187,15 @@ def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
         EPOCH = 1000
         LR = 0.001
 
-
-
         model = MyModel()
         model.to(device)
 
-
         optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-5)
-
 
         # prepare training data
         valid_size = 0.20
         train_states, valid_states, train_actions,  test_actions = train_test_split( visited_states, expert_actions, test_size = valid_size, shuffle=True )
   
-   
         train_dataset = StateImitationDataset(train_states, train_actions)
         test_dataset = StateImitationDataset(valid_states, test_actions)
 
@@ -236,8 +205,6 @@ def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
         valid_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
 
-
-        # main training loop
         for epoch in range(EPOCH):
 
             # validation
@@ -280,34 +247,26 @@ def iterative_il( path_to_save, n_demonstrations_list, random_seed=0 ):
 
             
         
-        # get new cov estimation for dart
+        # get new cov estimation
         model = model.cpu()
 
         cov = np.zeros((3,3))
         for i in range( len(rollout_trajectories_list_this_iter) ):
             sup_states = rollout_trajectories_list_this_iter[i]
             sup_actions = rollout_controls_list_this_iter[i]
-            # lnr_actions = np.array([lnr.intended_action(s) for s in sup_states])
-            # convert states_this_iteration which is a tensor to a list of tensors states_this_iteration_list
             sup_states_this_iteration_list = []
             for i in range( len( sup_states ) ):
                 sup_states_this_iteration_list.append( sup_states[i]) 
-
             lnr_actions_list = get_imitation_agent_action_sequential(model, sup_states_this_iteration_list, control_bounds, 'cpu' )
             lnr_actions = torch.concat( lnr_actions_list ).cpu().numpy()
-
-            # convert sup_actions to numpy
-            # sup_actions = sup_actions.cpu().numpy()
             diff = sup_actions - lnr_actions
             cov = cov + np.dot(diff.T, diff) / float(len(sup_actions))
         cov = cov / float(len(rollout_trajectories_list_this_iter))
         covariance = cov
 
         # save the model
-
         if not os.path.exists(path_to_save_this_iteration):
             os.makedirs(path_to_save_this_iteration)
-
         savename = f"im_model2.pt"
         torch.save(model.state_dict(), path_to_save_this_iteration + '/' + savename)
 

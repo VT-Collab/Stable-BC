@@ -29,33 +29,6 @@ def seedEverything(seed=DEFAULT_RANDOM_SEED):
     seedBasic(seed)
     seedTorch(seed)
 
-def sort_by_initial_conditions( trajectories_list, controls_list, initial_condition_tensor_list, additional_list=None ):
-    sorted_trajectories_list = []
-    sorted_controls_list = []
-    sorted_additional_list = []
-
-    for initial_condition_tensor in initial_condition_tensor_list:
-        for i in range(len(trajectories_list)):
-            if type(initial_condition_tensor) == torch.Tensor:
-                if torch.all(trajectories_list[i][0].eq(initial_condition_tensor)):
-                    sorted_trajectories_list.append(trajectories_list[i])
-                    sorted_controls_list.append(controls_list[i])
-                    if additional_list is not None:
-                        sorted_additional_list.append(additional_list[i])
-            elif type(initial_condition_tensor) == np.ndarray:
-                if np.all(trajectories_list[i][0] == initial_condition_tensor):
-                    sorted_trajectories_list.append(trajectories_list[i])
-                    sorted_controls_list.append(controls_list[i])
-                    if additional_list is not None:
-                        sorted_additional_list.append(additional_list[i])
-            else:
-                raise Exception('initial_condition_tensor type is not supported')
-    if additional_list is not None:
-        return sorted_trajectories_list, sorted_controls_list, sorted_additional_list
-    else:
-        return sorted_trajectories_list, sorted_controls_list
-
-
 def sample_initial_conditions_array(y_range, z_range, num_of_sample):
     initial_x = 0.2
     initial_vx = 0
