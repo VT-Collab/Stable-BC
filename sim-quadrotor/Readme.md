@@ -55,5 +55,5 @@ This script will evaluate the policies over 100 test rollouts stating from rando
 ### Results
 To plot the success rate of the policies, run the following command
 ```
-python3 plot_sam.py
+python3 plot_sem.py
 ```

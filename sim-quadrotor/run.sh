@@ -5,3 +5,5 @@ python3 run_train.py
 python3 dart.py
 wait
 python3 run_test.py
+wait
+python3 plot_sem.py
