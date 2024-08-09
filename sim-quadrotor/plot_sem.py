@@ -7,22 +7,6 @@ algs = [0, 1, 2]
 num_demos = [5, 10, 20, 40, 60, 100]
 random_seeds = [i for i in range(10)]
 
-# csv_file = open('results.csv', 'w', newline='')
-# writer = csv.writer(csv_file)
-# writer.writerow(algs)
-
-# for n in num_demos:
-#     writer.writerow([n])
-#     writer.writerow([''])
-#     for seed in random_seeds:
-#         success_rate = [0., 0., 0.]
-#         for alg in algs:
-#             file = open('first_results_0.001lr_1000epoch/lamda_0.0001/{}dems/{}/training_region_noise0.1/im_test_results_{}.txt'.format(n, seed, alg))
-#             text = file.readlines()
-#             success_rate[alg] = text[11][15:19]
-#         writer.writerow(success_rate)
-
-
 
 algs = [0, 1, 2]
 num_demos = [5, 10, 20, 40, 60, 100]
@@ -42,9 +26,6 @@ for n in num_demos:
             file = open('first_results_0.001lr_1000epoch/lamda_0.0001/{}dems/{}/training_region_noise0.1/im_test_results_{}.txt'.format(n, seed, alg))
             text = file.readlines()
             success_rate[seed][alg] = float(text[11][15:19])
-            # print(success_rate)
-            # input()
-    # print(np.array(success_rate))
     mean_bc.append(np.mean(np.array(success_rate)[:, 0]))
     mean_dart.append(np.mean(np.array(success_rate)[:, 2]))
     mean_stable.append(np.mean(np.array(success_rate)[:, 1]))

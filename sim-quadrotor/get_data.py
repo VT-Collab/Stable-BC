@@ -8,8 +8,6 @@ import torch
 import math
 from utils import *
 import time
-
-# sim10_quadrotor/get_data.py
 from quadrotor_mppi import get_one_mppi_trajectory
 
 
@@ -82,10 +80,6 @@ def get_expert_trajectories_multiprocessing( initial_condition_array_list, x_goa
                 collision_controls_list.append(result[1])
     print(' ---------- Multiprocess finished -----------')
     return valid_trajectories_list, valid_controls_list, collision_trajectories_list, collision_controls_list
-
-
-
-
 
 
 
@@ -184,10 +178,8 @@ def get_dataset(random_seed, n_training_initial_conditions, path_to_save):
     ax.set_zlabel('Z')
     plt.savefig( all_iterations_rollout_plot_str, dpi=300)
 
-
     x_trajectories_list = bc_rollout_success_trajectories_list
     controls_list = bc_rollout_success_controls_list
-
 
     # save the data
     data_dict = {
@@ -195,12 +187,7 @@ def get_dataset(random_seed, n_training_initial_conditions, path_to_save):
         'controls_list': controls_list
     }
 
-
     pickle.dump(data_dict, open(path_to_save + "/data_0.pkl", "wb"))
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -208,5 +195,3 @@ if __name__ == "__main__":
     n_training_initial_conditions = 100
     path_to_save = 'sim10_quadrotor/data'
     get_dataset(random_seed, n_training_initial_conditions, path_to_save)
-
-    a = 1

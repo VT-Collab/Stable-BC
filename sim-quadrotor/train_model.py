@@ -4,22 +4,11 @@ from torch.utils.data import Dataset
 from models import MyModel
 import pickle
 import matplotlib.pyplot as plt
-import wandb
 import datetime
 from utils import seedEverything
 from tqdm import tqdm
 import os, sys
 
-
-# def x_dot(x, u):
-#     x_dot = np.zeros_like(x)
-#     x_dot[...,0] = x[...,3]
-#     x_dot[...,1] = x[...,4]
-#     x_dot[...,2] = x[...,5]
-#     x_dot[...,3] = A_G * np.tan(u[...,2])
-#     x_dot[...,4] = -A_G * np.tan(u[...,1])
-#     x_dot[...,5] = u[...,0] - A_G
-#     return x_dot
 A_G = 9.81
 
 #  write x_dot function with torch
@@ -61,33 +50,8 @@ def train_model(num_dems, type, train_dataloader, valid_dataloader, savename, EP
 
     optimizer = torch.optim.Adam(model.parameters(), lr=LR, weight_decay=1e-5)
 
-    # helper code for getting eigenvalues
     relu = torch.nn.ReLU()
 
-
-    wandb.init(
-        # set the wandb project where this run will be logged
-        
-        project=f"state_6d_quad_{num_dems}_dems_{stability_loss_coef}coef_{LR}lr_{EPOCH}epoch_{datetime.datetime.now().strftime('%m-%d')}",
-
-        # set the name for this run, used in wandb to track the run
-        name=f"{num_dems}_dems_model{type}",
-
-
-        # track hyperparameters and run metadata
-        config={
-        "architecture": "64",
-        "epochs": EPOCH,
-        'type': type,
-        'num_dems': num_dems,
-        'savename': savename
-        }
-    )
-
-    # best_valid_loss = np.inf
-
-
-    # main training loop
     for epoch in range(EPOCH):
 
         # validation
@@ -166,75 +130,26 @@ def train_model(num_dems, type, train_dataloader, valid_dataloader, savename, EP
                 train_bar.set_description('Train iteration (epoch {}): [{}] Loss: {:.4f}, BC Loss: {:.4f}, Stability Loss: {:.4f}'.format(epoch, batch,
                                 total_loss / (batch + 1), total_loss_bc / (batch + 1), total_loss_stability / (batch + 1)))
 
-        
 
         
         n_training_samples = len(train_dataloader)
-
-        if type == 0:
-            wandb.log({"bc_loss": total_loss / n_training_samples, "test_loss": validdation_loss_per_sample })
-        elif type >= 1:
-                wandb.log({"total_loss": total_loss / n_training_samples, "bc_loss": total_loss_bc / n_training_samples, "stability_loss":total_loss_stability / n_training_samples, "test_loss": validdation_loss_per_sample })
-
-        # if not os.path.exists(models_path):
-        #     os.makedirs(models_path)
-
-
-        # # save the model and the best model
-        # if validdation_loss_per_sample < best_valid_loss or epoch == EPOCH - 1:
-        #     # we have a best model
-        #     best_valid_loss = validdation_loss_per_sample
-        #     str_save_model = '_b'
-        #     # save the best model
-        #     save_model(model, optimizer, self.criterion, epoch, checkpoint_path_to_save + f'/model_{epoch}{str_save_model}')
-        #     if not np.isnan( results['last_best_save_epoch'] ):
-        #         delete_model(checkpoint_path_to_save + '/model_{}{}'.format(results['last_best_save_epoch'], str_save_model))   
-        #     results['last_best_save_epoch'] = epoch
-        # else:
-        #     str_save_model = ''
-        #     if epoch % checkpoint_save_steps == 0:
-        #         # checkpoint_save model
-        #         save_model(model, optimizer, self.criterion, epoch, checkpoint_path_to_save + f'/model_{epoch}{str_save_model}')
-        #         if not np.isnan(results['last_save_epoch']):
-        #             delete_model(checkpoint_path_to_save + '/model_{}{}'.format(results['last_save_epoch'], str_save_model))
-        #         results['last_save_epoch'] = epoch
-
-
-        # # early stopping based on valid
-        # if enable_early_stop:
-        #     early_stopping(validdation_loss_per_sample)
-        #     if early_stopping.early_stop:
-        #         print(f"the model training stops at epoch {epoch} based on early stopping...")
-        #         print(f"last {early_stop_patience + 1} loss_main_valid values are: {results['valid_loss'][-(early_stop_patience + 1):]}")
-        #         break
-
-        # wandb.finish()
-        # # load the best model
-        # model, _, _ = load_model(model, optimizer, checkpoint_path_to_save + '/model_{}_b'.format(results['last_best_save_epoch']))
-
 
     if not os.path.exists(models_path):
         os.makedirs(models_path)
 
     torch.save(model.state_dict(), models_path + '/' + savename)
-    wandb.finish()
-
 
 
 
 
 def train_imitation_agent(num_dems, type: int, random_seed):
-    EPOCH = 1000 # 500
+    EPOCH = 1000
     LR = 0.001
-    stability_loss_coef = 0.0001 # 0.001
-
-
-
+    stability_loss_coef = 0.0001
 
     data_dict = pickle.load(open("sim10_quadrotor/data/data_0.pkl", "rb"))
     controls_list = data_dict["controls_list"]
     x_traj_list = data_dict["x_trajectories_list"]
-
 
     # randomly select num_dems indices
     seedEverything(random_seed)
@@ -249,16 +164,7 @@ def train_imitation_agent(num_dems, type: int, random_seed):
     test_x_traj_array = x_traj_array[int(0.8 * x_traj_array.shape[0]):]
     train_controls_array = controls_array[:int(0.8 * controls_array.shape[0])]
     test_controls_array = controls_array[int(0.8 * controls_array.shape[0]):]
-
-    # if type == 2:
-    #     pass
-    #     # simple implementation of CCIL
-    #     # state1[:2] += np.random.normal(0, 0.2, 2)
-    #     # action1 = (state[:2] + u1) - state1[:2]
-    # either implement ccil in data collection and load it or implement it here
-        
-   
-   
+      
     train_dataset = StateImitationDataset(train_x_traj_array, train_controls_array)
     test_dataset = StateImitationDataset(test_x_traj_array, test_controls_array)
 
@@ -272,23 +178,3 @@ def train_imitation_agent(num_dems, type: int, random_seed):
     savename = f"im_model{type}.pt"
     train_model(num_dems, type, train_dataloader, test_dataloader, savename, EPOCH=EPOCH, LR=LR, stability_loss_coef=stability_loss_coef, models_path=models_path)
     
-
-
-
-
-
-# train behavior cloned agent
-# type 0: standard behavior cloning (baseline1)
-# type 1: our proposed approach (stable)
-if __name__ == "__main__":
-
-    # use gpu number 1
-    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
-
-    num_dems = 11
-    random_seed = 0
-
-    train_imitation_agent(num_dems, 1, random_seed)
-    # train_imitation_agent(num_dems, 0, random_seed)
-
-
