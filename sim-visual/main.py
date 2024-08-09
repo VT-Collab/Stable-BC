@@ -16,9 +16,9 @@ def main(cfg=DictConfig):
 
     if cfg.get_demo:
         get_dataset(cfg)
+        train_ae(cfg)
 
     if cfg.train:
-        train_ae(cfg)
         train_model(cfg)
 
     if cfg.rollout:

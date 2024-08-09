@@ -1,7 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import pickle
-import argparse
+import json
 
 
 
@@ -19,8 +17,8 @@ def get_dataset(cfg):
         img = np.zeros((21, 21)).astype(int)
         img[goal_pixel[0], goal_pixel[1]] = 255
 
-        dataset.append(list(robot_pos) + list(img.flatten()) + list(robot_action))
+        dataset.append(list(robot_pos) + list(np.float64(img.flatten())) + list(robot_action))
 
-    pickle.dump(dataset, open("data/data.pkl", "wb"))
+    json.dump(dataset, open("data/data.json", "w"))
     print("dataset has this many state-action pairs:", len(dataset))
 

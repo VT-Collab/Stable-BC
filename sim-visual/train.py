@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from models import MyModel, Autoencoder
-import pickle
+import json
 
 
 
@@ -10,7 +10,7 @@ import pickle
 class MyData(Dataset):
 
     def __init__(self):
-        self.data = pickle.load(open("data/data.pkl", "rb"))
+        self.data = json.load(open("data/data.json", "r"))
         print("imported dataset of length:", len(self.data))
 
     def __len__(self):

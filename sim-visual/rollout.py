@@ -1,10 +1,8 @@
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 from models import MyModel, Autoencoder
 import csv
-import argparse
-
+import json
 
 
 def rollout(cfg):
@@ -18,7 +16,7 @@ def rollout(cfg):
     ae.eval()
     # main loop
     error = []
-    n_rollouts = cfg.n_rollouts
+    n_rollouts = cfg.num_rollouts
     n_timesteps = 30
     for _ in range(n_rollouts):
         # get environment
@@ -39,15 +37,16 @@ def rollout(cfg):
         # get error
         error.append(np.linalg.norm(goal_pos - robot_pos))
     error = np.array(error)
-    return np.mean(error)
+    return error, np.mean(error)
 
 
 def rollout_policy(cfg):
-    savename = 'data/results_{}_{}.csv'.format(cfg.alg, cfg.num_dp)
+    savename = 'data/results_{}'.format(cfg.alg)
     # get error for each model
-    error = rollout(cfg)
-    print("average error:", np.round(error, 2))
-    with open(savename,'a') as myfile:
-        datarow = error
+    error, avg_error = rollout(cfg)
+    json.dump(error.tolist(), open(savename + '.json', 'w'))
+    print("average error for {}:".format(cfg.alg), np.round(avg_error, 2))
+    with open(savename + '.csv','a') as myfile:
+        datarow = [avg_error]
         wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
         wr.writerow(list(datarow))

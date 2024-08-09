@@ -3,8 +3,8 @@ train: False
 rollout: False
 
 alg: 'bc' #Choose between 'bc' and 'stable'
-num_dp: 1000
-num_rollouts: 1000
+num_dp: 1000 #Number of demonstration datapoints to be collected
+num_rollouts: 1000 #Number of evaluation rollouts
 
 defaults:
     - _self_  
