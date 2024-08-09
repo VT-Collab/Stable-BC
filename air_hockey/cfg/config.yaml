@@ -7,7 +7,7 @@ alg: 'bc' # Choose between 'bc' and 'stable'
 num_dp: 300 # Number of datapoints to train the model on. N datapoints = N/20 seconds of data.
 eval_num: 0 # rillout number of a given model
 seed: 0
-train_full: False
+train_full: False # Toggle if you want to train the collected data from 10 users
 
 defaults:
     - _self_  

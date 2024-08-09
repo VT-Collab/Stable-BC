@@ -3,8 +3,8 @@ import socket
 import time
 import pygame
 import cv2
-from imutils.video import VideoStream
 
+# Connect to the gamepad and read selected joystick and button inputs
 class Joystick(object):
 
     def __init__(self):
@@ -36,11 +36,12 @@ class camera():
         time.sleep(0.1)
         self.vs.set(cv2.CAP_PROP_AUTOFOCUS, 0)
 
-
+    # Function to get the position of the puck in pixel space
     def get_target(self):
         _, frame = self.vs.read()
         frame = cv2.flip(frame, 1)
 
+        # Crop the camera image show just the air hockey table
         roi = (255, 0, 203, 385)
 
         clone = frame.copy()
@@ -48,7 +49,8 @@ class camera():
                     int(roi[0]):int(roi[0] + roi[2])]
 
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
+        
+        # Color range to track the puck
         red_lower = np.array([170, 100, 100], np.uint8)
         red_upper = np.array([180, 255, 255], np.uint8)
 
@@ -76,38 +78,19 @@ class camera():
             center_points1 = centre_of_contour
             r1 = center_points1[0]
             c1 = center_points1[1]
-            # y = r1-150
-            # x = 425-c1
-            # print(c1, r1)
-            # print("target_x={}, target_y={}".format(x/460*1.12,y/340*0.92))
             cv2.imshow('Image window', img)
             cv2.waitKey(1)
 
             return (c1, r1)
-
-        
         return None
-    
-def get_img(self):
-        _, frame = self.vs.read()
-        frame = cv2.flip(frame, 1)
 
-        roi = (195, 48, 175, 345)
-
-        clone = frame.copy()
-        img = clone[int(roi[1]):int(roi[1] + roi [3]), \
-                    int(roi[0]):int(roi[0] + roi[2])]
-        
-        img = cv2.resize(img, (32, 48))
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-        return img
-
+# Class to connect and communicate with the Franka Emika Robot controller
 class FR3(object):
 
     def __init__(self):
         self.home = np.array([0, -np.pi/4, 0, -3*np.pi/4, 0, np.pi/2, np.pi/4])
 
+    # Connect to the controller
     def connect(self, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -116,10 +99,7 @@ class FR3(object):
         conn, addr = s.accept()
         return conn
 
-    def send2gripper(self, conn, command):
-        send_msg = "s," + command + ","
-        conn.send(send_msg.encode())
-
+    # Send joint velocity to the robot
     def send2robot(self, conn, qdot, control_mode, limit=1.0):
         qdot = np.asarray(qdot)
         scale = np.linalg.norm(qdot)
@@ -132,6 +112,7 @@ class FR3(object):
         send_msg = "s," + send_msg + "," + control_mode + ","
         conn.send(send_msg.encode())
 
+    # Get the raw states of the robot
     def listen2robot(self, conn):
         state_length = 7 + 42
         message = str(conn.recv(2048))[2:-2]
@@ -161,6 +142,7 @@ class FR3(object):
         states["x"] = np.array(xyz)
         return states
 
+    # Read the robot state
     def readState(self, conn):
         while True:
             states = self.listen2robot(conn)
@@ -168,10 +150,13 @@ class FR3(object):
                 break
         return states
 
+    # Convert velocity from cartesian space to joint space
     def xdot2qdot(self, xdot, states):
         J_inv = np.linalg.pinv(states["J"])
         return J_inv @ np.asarray(xdot)
 
+    # Forward kinematics to compute end effector pose in cartesian space
+    # Returns the 3-D position and the rotation matrix
     def joint2pose(self, q):
         def RotX(q):
             return np.array([[1, 0, 0, 0], [0, np.cos(q), -np.sin(q), 0], [0, np.sin(q), np.cos(q), 0], [0, 0, 0, 1]])
@@ -194,6 +179,7 @@ class FR3(object):
         xyz = T[:,3][:3]
         return xyz, R
 
+    # Send the robot to a goal position in joint space
     def go2position(self, conn, goal=False):
         if not goal:
             goal = self.home
@@ -209,15 +195,18 @@ class FR3(object):
             dist = np.linalg.norm(states["q"] - goal)
             elapsed_time = time.time() - start_time
 
+    # Compute velocity of robot based on joystick inputs
     def get_vel(self, z, state, start_state, record):
         xdot = np.array([0.]*6)
         xdot[0] = -0.5 * z[0]
         xdot[1] = 0.25 * z[1]
 
+        # Bound the velocity to avoid collisions and angle wrapping issues
         xdot = self.get_bounds(xdot, state, start_state, record)
 
         return xdot
     
+    # Compute teh velocity bounds
     def get_bounds(self, xdot, state, start_state, record):
         if (state['x'][0] <= 0.48 and xdot[0] < 0):
             xdot[0] = 1*(0.48 - state['x'][0])

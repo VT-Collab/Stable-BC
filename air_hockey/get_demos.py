@@ -1,4 +1,3 @@
-import numpy as np
 import json
 import time
 
@@ -6,6 +5,7 @@ from utils import FR3, Joystick, camera
 
 
 def get_dataset(cfg):
+    # Connect to the control interface
     cam = camera()
 
     robot = FR3()
@@ -25,6 +25,7 @@ def get_dataset(cfg):
     dataset = []
     start_state = robot.readState(conn)['x']
     print("[*] Press A to start recording demos")
+    # Main data collection loop
     while True:
 
         z, a_button, b_button, start_button = interface.input()
@@ -43,23 +44,17 @@ def get_dataset(cfg):
             print("[*] Saved {} datapoints".format(len(dataset)))
             return
 
+        # Get joystick velocities, compute bounds and send velocity command to robot
         state = robot.readState(conn)
-        
-
         xdot = robot.get_vel(z, state, start_state, record)
-        
         qdot = robot.xdot2qdot(xdot, state)
         robot.send2robot(conn, qdot, control_mode, limit=1.5)
 
         curr_time = time.time()
+        # save the recorded data
         if record and curr_time - start_time >= step_time:
-            print(curr_time - start_time)
-
             puck_pos = cam.get_target()
             if puck_pos is None:
                 continue
             dataset.append(list(state['x'][:2]) + list(puck_pos) + list(xdot[:2]))
             start_time = curr_time
-
-255, 0
-458, 388
