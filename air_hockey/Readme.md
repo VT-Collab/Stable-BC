@@ -32,7 +32,7 @@ python3 main.py train=True user=<user_number> num_dp=<datapoints> alg=<algorithm
 ```
 Choose the algorithm from 'bc' and 'stable'.
 
-This will train a policy for the respective algorithm and number of datapoints and save the trained policy in `data/user_<user_number>/{datapoints}_dp/model_<algorithm>.pt`
+This will train a policy for the respective algorithm and number of datapoints and save the trained policy in `data/user_<user_number>/<datapoints>_dp/model_<algorithm>.pt`
 
 ### Evaluation
 
