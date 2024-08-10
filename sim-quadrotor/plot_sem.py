@@ -23,7 +23,7 @@ for n in num_demos:
     success_rate = np.zeros((10, 3)).tolist()
     for seed in random_seeds:
         for alg in algs:
-            file = open('first_results_0.001lr_1000epoch/lamda_0.0001/{}dems/{}/training_region_noise0.1/im_test_results_{}.txt'.format(n, seed, alg))
+            file = open('results_0.001lr_1000epoch/lamda_0.0001/{}dems/{}/training_region_noise0.1/im_test_results_{}.txt'.format(n, seed, alg))
             text = file.readlines()
             success_rate[seed][alg] = float(text[11][15:19])
     mean_bc.append(np.mean(np.array(success_rate)[:, 0]))

@@ -279,7 +279,7 @@ if __name__ == '__main__':
     n_demonstrations_list = [5, 10, 20, 40, 60, 100]
 
 
-    path_to_save = 'sim10_quadrotor/first_results_0.001lr_1000epoch/lamda_0.0001'
+    path_to_save = 'sim-quadrotor/results_0.001lr_1000epoch/lamda_0.0001'
 
     for random_seed in random_seed_list:
         iterative_il( path_to_save, n_demonstrations_list, random_seed )

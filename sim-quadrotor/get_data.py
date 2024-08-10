@@ -193,5 +193,5 @@ def get_dataset(random_seed, n_training_initial_conditions, path_to_save):
 if __name__ == "__main__":
     random_seed = 0
     n_training_initial_conditions = 100
-    path_to_save = 'sim10_quadrotor/data'
+    path_to_save = 'sim-quadrotor/data'
     get_dataset(random_seed, n_training_initial_conditions, path_to_save)

@@ -147,7 +147,7 @@ def train_imitation_agent(num_dems, type: int, random_seed):
     LR = 0.001
     stability_loss_coef = 0.0001
 
-    data_dict = pickle.load(open("sim10_quadrotor/data/data_0.pkl", "rb"))
+    data_dict = pickle.load(open("sim-quadrotor/data/data_0.pkl", "rb"))
     controls_list = data_dict["controls_list"]
     x_traj_list = data_dict["x_trajectories_list"]
 
@@ -173,7 +173,7 @@ def train_imitation_agent(num_dems, type: int, random_seed):
     train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
 
-    models_path= f"sim10_quadrotor/first_results_{LR}lr_{EPOCH}epoch/lamda_{stability_loss_coef}/{num_dems}dems/{random_seed}"
+    models_path= f"sim-quadrotor/results_{LR}lr_{EPOCH}epoch/lamda_{stability_loss_coef}/{num_dems}dems/{random_seed}"
 
     savename = f"im_model{type}.pt"
     train_model(num_dems, type, train_dataloader, test_dataloader, savename, EPOCH=EPOCH, LR=LR, stability_loss_coef=stability_loss_coef, models_path=models_path)
