@@ -1,7 +1,6 @@
 
 import hydra
-from omegaconf import DictConfig, OmegaConf
-from typing import Dict
+from omegaconf import DictConfig
 import os, sys
 from get_demos import get_dataset
 from process_demos import process_demos
