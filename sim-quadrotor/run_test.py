@@ -10,7 +10,7 @@ if __name__ == "__main__":
     random_seed_list = [ i for i in range( 10 )]
     test_name_list = [ 'training_region' ]
 
-    base_path_list = [ 'sim10_quadrotor/first_results_0.001lr_1000epoch/lamda_0.0001' ]
+    base_path_list = [ 'sim-quadrotor/results_0.001lr_1000epoch/lamda_0.0001' ]
 
     for base_path in base_path_list:
         for n_dems in n_dems_list:

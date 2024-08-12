@@ -20,7 +20,7 @@ To collect demonstrations in the quadrotor environment using the MPPI expert, ru
 ```
 python3 get_data.py
 ```
-This script will create a folder `data/` and generate demonstration dataset stored in `sim10_quadrotor/data/data_0.pkl`.
+This script will create a folder `data/` and generate demonstration dataset stored in `sim-quadrotor/data/data_0.pkl`.
 
 ### Training the policy
 In this environment, since the robot has access to the full state information, we use the loss function in Equation 7 to learn a policy for Stable-BC:
