@@ -46,10 +46,10 @@
   <meta property="og:type" content="video.other" />
   <meta property="og:title" content="Stable-BC: Controlling Covariate Shift with Stable Behavior Cloning" />
   <meta property="og:url" content="https://collab.me.vt.edu/stable-bc/" />
-  <meta property="og:image" content="" />
+  <meta property="og:image" content="./static/resources/front.png" />
   <meta property="og:image:secure" content="./static/resources/front.png" />
-  <meta property="og:video" content="./static/resources/front.png" />
-  <meta property="og:video:secure" content="" />
+  <meta property="og:video" content="https://youtu.be/ZC3BjY1k18w" />
+  <meta property="og:video:secure" content="https://youtu.be/ZC3BjY1k18w" />
 
 
 
@@ -162,19 +162,22 @@
           </div>
         </div>
       </div>
-    </div>
-    <!--/ Abstract. -->
 
     <!-- Paper video. -->
     <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
+      <div class="column is-max-desktop">
         <h2 class="title is-3">Video</h2>
         <div class="publication-video">
-          <iframe src="rel=0&amp;showinfo=0"
-                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <iframe src="https://www.youtube.com/embed/ZC3BjY1k18w"
+                  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
+    </div>
+    <!--/ Abstract. -->
+
+    
+
     <!--/ Paper video. -->
   </div>
 </section>
@@ -195,7 +198,7 @@
       <div class="is-vcentered interpolation-panel">
         <div class="content has-text-justified">
           <p style = "font-size: 18px">
-            Stable-BC leverages offline demonstrations proivded by experts to learn a behavior cloning policy that is robust to covariate shift and out-of-distribution data. We model the covariate shift in the robot and environment states as a linearized coupled dynamical system. When this dynamical system is stable the learned behavior of the policy locally converges towards the behavior of the human demonstrations, thus mitigating covariate shift. However, only stabilizing this dynamical system does not guarantee the performance of the robot to solve the task successfully. We train the robot to match the expert's demonstrations using standard behavior cloning loss function in addition to stabilizing the dynamical system. This leads to the learned policy performing the task successfully while also converging to the behaviros of the experts in the demonstration dataset.
+            Stable-BC leverages offline demonstrations proivded by experts to learn a behavior cloning policy that is robust to covariate shift. We model the covariate shift in the robot and environment states as a linearized coupled dynamical system. When this dynamical system is stable, the learned behavior of the policy locally converges towards the behavior of the human demonstrations, thus mitigating covariate shift. However, only stabilizing this dynamical system does not guarantee that the robot will solve the task successfully. We train the robot to match the expert's demonstrations using the standard behavior cloning loss function in addition to stabilizing the dynamical system. This leads to the learned policy performing the task successfully while also converging to the behaviors of the experts in the demonstration dataset.
           </p>
         </div>
       </div>
