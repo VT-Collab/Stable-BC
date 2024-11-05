@@ -413,6 +413,51 @@
   </div>
 </section> -->
 
+<section class="section">
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <h2 class="title is-2" style="text-align: center;">Comparison to Offline-RL</h2>
+      <tr>
+        <td>
+          <br>
+          <div class="columns is-centered has-text-centered">
+            <img src="./static/resources/sim_cql.png" style="width: 100%;"></img>
+          </div>
+        </td>
+      </tr>
+      <div class="is-vcentered interpolation-panel">
+        <div class="content has-text-justified">
+          <p style = "font-size: 18px">
+            In addition to the experiments provided in the paper, we also compare our approach to an Offline-RL algorithm (CQL) in the intersection environment. Our results suggest that Stable-BC converges to demonstrator level performance with fewer demonstrations as compared to CQL. However, when both approaches have access to large number of demonstrations, Offline-RL may outperform Stable-BC. This trend is observed due to the fact that Offline-RL has access to the reward funcitons in addition to expert demonstrations. While Stable-BC only leverages the noisy imperfect data provided by the demonstrator to learn a policy, CQL overcomes these imperfect demonstrations as it has access to the reward function during training. This suggests that when we have access to a large number of demonstrations along with the reward functions for the task, Offline-RL can be used to learn a policy that can outperform the demonstrator. However, when the robot has access to a few demonstrations or the reward function for the task is not readily available, Stable-BC can be leveraged to learn a robust policy that can match the demonstrator performance.
+          </p>
+        </div>
+      </div>
+  </div>
+  </div>
+
+  <!-- <div class="columns is-centered">
+    <div class="column is-half">
+      <h2 class="title is-2" style="text-align: center;">Algorithm and Implementation</h2>
+      <tr>
+        <td>
+          <br>
+          <div class="columns is-centered has-text-centered">
+            <img src="./static/resources/algorithm.png" style="width: 80%;"></img>
+          </div>
+        </td>
+      </tr>
+      <div class="is-vcentered interpolation-panel">
+        <div class="content has-text-justified">
+          <p style = "font-size: 18px">
+            A summary of Stable-BC algorithm. The robot assumes access to the demonstrated state-action pairs and its own dynamics. If the robot has access to the environment dynamics, i.e. how the environment state evolves given the robot state, the environment state and the robot's actions, we use Equation (7) from the manuscript to train the robot's policy. However, if the robot does not know the environment dynamics (which is more often the case), we leverage the bounded stability and Equation (11) to learn a policy robust to covariate shift. The policy of the robot is a fully connected MLP initialized with random weights. The policy is optimized using ADAM optimizer with a learning rate of 0.001.
+          </p>
+        </div>
+      </div>
+  </div>
+  </div> -->
+
+</section>
+
 
 
 <section class="section" id="BibTeX">
