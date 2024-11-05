@@ -29,3 +29,7 @@ The implementation details for each experiment are provided in the respective di
 - [Vision-Based Environment](https://github.com/VT-Collab/Stable_BC/tree/master/sim-visual)
 
 - [Air Hockey Experiments](https://github.com/VT-Collab/Stable_BC/tree/master/air_hockey)
+
+## Comparison with Offline-RL
+In addition to the comparison with state-of-the-art imitation learning algorithms performed in the manuscript, we also compare our proposed approach to an Offline-RL algorithm in the intersection environment. The implementation details for the Offline-RL algorithm and a detailed comparison of performance against Stable-BC is provided in:
+- [Intersection Environment/CQL](https://github.com/VT-Collab/Stable-BC/tree/master/sim-intersection/CQL)
