@@ -26,7 +26,7 @@ This script will create a folder `data/` and generate demonstration dataset stor
 In this environment, since the robot has access to the full state information, we use the loss function in Equation 7 to learn a policy for Stable-BC:
 
 $$
-\mathcal L(\theta) = \sum_{(x, y, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, y)\|\|^2 + \lambda \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
+\mathcal L(\theta) = \sum_{(x, o, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, o)\|\|^2 + \lambda \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
 $$
 
 with $\lambda = 0.0001$. 

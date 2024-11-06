@@ -3,17 +3,17 @@ This directory provided the implementation details for an Offline-RL algorithm, 
 ## Environment
 The enviornment consists of a simulated human car and a autonomous car trying to cross an intersection, while avoiding a collision.
 
-The autonomous car state $x \in \mathbb{R}^2$ is its position and the action $u \in \mathbb{R}^2$ is the autonomous car's velocity. The environment state $y \in \mathbb {R}^2$ is the state of the simulated human car. In this simulation, the robot knows its dynamics $f(x, u)$, but does not have access to the dynamics of the human car $g(x, y, u)$.
+The autonomous car state $x \in \mathbb{R}^2$ is its position and the action $u \in \mathbb{R}^2$ is the autonomous car's velocity. The environment state $o \in \mathbb {R}^2$ is the state of the simulated human car. In this simulation, the robot knows its dynamics $f(x, u)$, but does not have access to the dynamics of the human car $g(x, o, u)$.
 
 To collect demonstrations in this environment, both the agents optimize for the following cost function from our manuscript:
 
 $$
-Cost(x, y, c) = \|\|x(t + \Delta t) - c\|\| - \|\|x(t) - c\|\| + 0.75 \cdot \|\|x(t) - y(t)\|\| - 0.75 \cdot \|\|x(t + \Delta t) - y(t)\|\|
+Cost(x, o, c) = \|\|x(t + \Delta t) - c\|\| - \|\|x(t) - c\|\| + 0.75 \cdot \|\|x(t) - o(t)\|\| - 0.75 \cdot \|\|x(t + \Delta t) - o(t)\|\|
 $$
 
 where $c$ is the position of the constant goal in the environment (across the intersection). Similar to our implementation of Stable-BC, each demonstration comprises of 20 datapoints and the reward for each state action pair in the demonstration is computed as 
 $$
-Reward(x, y, c) = -Cost(x, y, c)
+Reward(x, o, c) = -Cost(x, o, c)
 $$
 
 ## Implementation
@@ -33,7 +33,7 @@ The three test cases for the evaluation of the CQL algorithm are the same as tho
 ## Results
 Our results for this experiment are summarized in the figure below. We report the autonomous car's total cost across an interaction, where the cost at current timestep is computed using the cost function defined above. 
 
-To evaluate the robustness of the learned policies, we evaluate each trained policy in three different settings. We start with testing in an environment that exactly matches the training environment (Left Column in the Figure). Next to evaluate the performance of the policy when it comes across data that it has not seen during training, we modify the learning dynamis of $g$ of the human-driven car (Middle column in the figure). In this setting, instead of moving to avoid the autonomous car with dynamics $g(x, y), the human-driven car was self-centered and only reasoned over their own state to reach the goal using dynamics $g(x)$. In our final setting, the initial states of the robot car $x(0)$ were sampled from a different distribution than during training (Right column in the Figure). The human followed the same dynamics $g(x, y)$ as during training, but the autonomous car now had to figure out how to navigate around the workspace and the human from new regions of the workspace. 
+To evaluate the robustness of the learned policies, we evaluate each trained policy in three different settings. We start with testing in an environment that exactly matches the training environment (Left Column in the Figure). Next to evaluate the performance of the policy when it comes across data that it has not seen during training, we modify the learning dynamis of $g$ of the human-driven car (Middle column in the figure). In this setting, instead of moving to avoid the autonomous car with dynamics $g(x, o), the human-driven car was self-centered and only reasoned over their own state to reach the goal using dynamics $g(x)$. In our final setting, the initial states of the robot car $x(0)$ were sampled from a different distribution than during training (Right column in the Figure). The human followed the same dynamics $g(x, o)$ as during training, but the autonomous car now had to figure out how to navigate around the workspace and the human from new regions of the workspace. 
 
 <center>
     <div align="center">

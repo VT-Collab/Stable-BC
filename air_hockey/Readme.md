@@ -3,7 +3,7 @@ This directory provides the implemetnation details for our real world air hockey
 ## Environment
 The environment consists of a 7-DoF Franka Emika Panda robot arm trying to play a simplified game of air hockey. The goal of the robot is to hit the puck as many times as possible without missing it.
 
-The state of the robot $x \in \mathbb{R}^2$ is the position of the robot's end effector on the air hockey table and the action $u \in \mathbb{R}^2$ is the velocity of the robot's end effector. The environment state $y \in \mathbb{R}^2$ is the position of the puck in the camera frame. In this experiment, the robot knows its dynamics $f(x, u)$, but does not have access to the dynamics of the puck on the air hockey table $g(x, y, u)$.
+The state of the robot $x \in \mathbb{R}^2$ is the position of the robot's end effector on the air hockey table and the action $u \in \mathbb{R}^2$ is the velocity of the robot's end effector. The environment state $o \in \mathbb{R}^2$ is the position of the puck in the camera frame. In this experiment, the robot knows its dynamics $f(x, u)$, but does not have access to the dynamics of the puck on the air hockey table $g(x, o, u)$.
 
 ## Implementation
 A list of all the arguments used in this experiment can be found in `cfg/config.yaml`
@@ -21,7 +21,7 @@ This script will initiate communication with the robot and prompt the user to st
 In this experiment, since the robot does not have access to the environment dynamics (dynamics of the simulated human car), we use the loss function in Equation 11 to learn a policy for Stable-BC:
 
 $$
-\mathcal L(\theta) = \sum_{(x, y, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, y)\|\|^2 + \lambda_1 \|\|A_2\|\| + \lambda_2 \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
+\mathcal L(\theta) = \sum_{(x, o, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, o)\|\|^2 + \lambda_1 \|\|A_2\|\| + \lambda_2 \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
 $$
 
 with $\lambda_1 = 0.1$ and $\lambda_2=10.0$. 
