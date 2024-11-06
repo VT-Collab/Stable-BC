@@ -1,4 +1,4 @@
-This directory provided the implementation details for an Offline-RL algorithm, Conservative Q-Learning (CQL), in the interactive intersection environment. 
+This directory provided the implementation details for an Offline-RL algorithm, Conservative Q-Learning (CQL) [[1]](#references), in the interactive intersection environment. 
 
 ## Environment
 The enviornment consists of a simulated human car and a autonomous car trying to cross an intersection, while avoiding a collision.
@@ -17,7 +17,7 @@ Reward(x, y, c) = -Cost(x, y, c)
 $$
 
 ## Implementation
-We follow the implementation of CQL provided in [https://github.com/BY571/CQL/tree/main/CQL-SAC](https://github.com/BY571/CQL/tree/main/CQL-SAC). 
+We follow the implementation of CQL provided in [https://github.com/BY571/CQL](https://github.com/BY571/CQL). 
 
 To collect demos, train and evaluate the algorithm over 10 independent runs execute the following script
 ```
@@ -46,3 +46,6 @@ To evaluate the robustness of the learned policies, we evaluate each trained pol
 In the figure above, we observe that Stable-BC converges to demonstrator level performance with fewer demonstrations as compared to CQL. However, when both the algorithms have access to large number of demonstrations, Offline-RL may ourperform Stable-BC. We observe this trend due to the interplay of the rewards and the demonstrations. Stable-BC learns to match the behaviors demonstrated by the human experts. Since the experts can be noisy and suboptimal, Stable-BC converges to a suboptimal performance matching that of the experts. Offline-RL is able to overcome these imperfect demonstrations because it has access to the true reward function during training, i. e. it knows what exactly to optimize for. Hence, as expected, Offline-RL can outperform Stable-BC when provided with a sufficient number of noisy and imperfect demonstrations. 
 
 This experiment suggests that when the robot has access to a few demonstrations or the reward function for the task is not readily available (for example in a real world air hockey experiment), Stable-BC can be leverages to achieve a demonstrator level performance while performing the task. However, when we have access to large dataset of demonstrations along with the reward functions for the tasks. Offline-RL can be leveraged to learn a policy that can achieve better-than-demonstrator performance. 
+
+## References
+[[1]](https://proceedings.neurips.cc/paper/2020/hash/0d2b2061826a5df3221116a5085a6052-Abstract.html) Kumar A, Zhou A, Tucker G, Levine S. Conservative q-learning for offline reinforcement learning. Advances in Neural Information Processing Systems. 2020

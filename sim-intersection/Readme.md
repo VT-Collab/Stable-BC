@@ -28,7 +28,7 @@ To collect demos in the intersection environment using the cost function defined
 ```
 python3 main.py get_demo=True num_demos=<number of demos>
 ```
-This script will create a folder `data/` and generate demonstration datasets for both *BC* and *CCIL*. The dataset for *BC* will be stored in `data/data.json` and that for *CCIL* will be stored in `data/data_ccil.json`.
+This script will create a folder `data/` and generate demonstration datasets for both *BC* and *CCIL*. The dataset for *BC* will be stored in `data/data.json` and that for *CCIL* [[1]](#references) will be stored in `data/data_ccil.json`.
 
 ### Training the policy
 In this environment, since the robot does not have access to the environment dynamics (dynamics of the simulated human car), we use the loss function in Equation 11 to learn a policy for Stable-BC:
@@ -58,3 +58,6 @@ To run the evaluations, run the following command:
 python3 main.py rollout=True alg=<algorithm> test_case=<1, 2 or 3>
 ```
 By default, this code will evaluate the selected algorithm for the chosen test case over 100 rollouts. The raw cost data for the 100 rollouts will be stored in `data/results_<algorithm>_<test_case>.json` and the average of the costs will be stored in `data/results_<algorithm>_<test_case>.csv`
+
+## References
+[[1]](https://arxiv.org/abs/2310.12972) Ke L, Zhang Y, Deshpande A, Srinivasa S, Gupta A. CCIL: Continuity-based Data Augmentation for Corrective Imitation Learning. arXiv preprint arXiv:2310.12972. 2023

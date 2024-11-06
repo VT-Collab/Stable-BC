@@ -35,7 +35,7 @@ To train the BC and Stable-BC policies, run the following script
 ```
 python3 run_train.py
 ```
-To train the DART policy, run the following script
+To train the DART [[1]](#references) policy, run the following script
 ```
 python3 dart.py
 ```
@@ -57,3 +57,6 @@ To plot the success rate of the policies, run the following command
 ```
 python3 plot_sem.py
 ```
+
+## References
+[[1]](https://proceedings.mlr.press/v78/laskey17a.html) Laskey M, Lee J, Fox R, Dragan A, Goldberg K. Dart: Noise injection for robust imitation learning. In Conference on robot learning 2017.
