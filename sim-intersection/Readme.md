@@ -37,7 +37,11 @@ $$
 \mathcal L(\theta) = \sum_{(x, o, u) \in \mathcal D}\Big [ \|\|u - \pi_\theta(x, o)\|\|^2 + \lambda_1 \|\|A_2\|\| + \lambda_2 \sum_{\sigma_i \in eig(A_1)} ReLU(Re(\sigma_i)) \Big]
 $$
 
-with $\lambda_1 = 0.1$ and $\lambda_2=10.0$. 
+with $\lambda_1 = 0.1$ and $\lambda_2=10.0$. Note that these values for our model-free formulation are different from our $\lambda$ value ($\lambda=10^{-4}$) for our model-based formulation in our [quadrotor experiments](https://github.com/VT-Collab/Stable_BC/tree/master/sim-quadrotor). 
+
+Since we discuss two different formulations of our approach to control the covariate shift based on the amount of information available from the environment, the lambda values differ across these formulations.
+We hypothesise that this variation in lambda values may be the result of the scaling of the velocity in different environments. In our model-based quadrotor experiments, the control inputs to the quadrotor are provided in terms of thrust and roll and pitch. To that end, the velocity is not bounded and can be very high at some states in the environment. This in turn increases the magnitude of the eigenvalues of the A matrix. Due to this, we need to choose a smaller lambda value so that the imitation learning loss is not overpowered by the stability loss. On the other hand, in all of our model-free experiments, the input to the robot was provided in terms of velocity and this input velocity was bounded. This leads to relatively smaller eigenvalues of the A matrix, thus requiring a higher lambda value for the stability loss as  compared to the model-based formulation. We note that even though these values differ across the different formulations of our approach, we use the same lambda values for all the experiments performed under the respective formulation.
+
 
 To train the policy, run the following script
 ```
